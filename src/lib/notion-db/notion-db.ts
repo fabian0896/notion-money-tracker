@@ -13,7 +13,7 @@ export class NotionDBClient {
 
   async from<T extends Schema>(
     schema: DatabaseSchema<T>
-  ): Promise<Array<InferSchemaType<T> & { id: string }>> {
+  ): Promise<InferSchemaType<T>[]> {
     const reuls = await this.client.dataSources.query({
       data_source_id: schema.databaseId,
       result_type: "page",
@@ -26,7 +26,7 @@ export class NotionDBClient {
   private format<T extends Schema>(
     schema: T,
     page: PageObjectResponse
-  ): InferSchemaType<T> & { id: string } {
+  ): InferSchemaType<T> {
     const properties = page.properties;
     const select = Object.entries(schema);
     return select.reduce(
@@ -40,7 +40,7 @@ export class NotionDBClient {
   }
 }
 
-export function defineSchema<T extends Schema = Schema>(
+export function defineNotionTable<T extends Schema = Schema>(
   databaseId: string,
   schema: T
 ): DatabaseSchema<T> {

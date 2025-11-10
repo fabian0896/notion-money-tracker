@@ -6,8 +6,8 @@ const app = factory.createApp();
 
 app.get('/categories', async (c) => {
   const db = notiondb(c);
-  const result = await db.from(categoriesTable);
-  return c.json(result);
+  const categories = await db.from(categoriesTable);
+  return c.json(categories);
 });
 
 export default app;

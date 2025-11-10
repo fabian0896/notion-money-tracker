@@ -3,12 +3,27 @@ import { Column } from "./db-types";
 export function id(): Column<string> {
   return {
     type: "id",
-    notionName: "id",
+    notionName: "_id",
     serialize: (value: string) => {
       return { id: value };
     },
     deserialize: (_notion: any, page) => {
       return page.id;
+    },
+  };
+}
+
+export function emoji(): Column<string> {
+  return {
+    type: "id",
+    notionName: "_emoji",
+    serialize: (value: string) => {
+      return { id: value };
+    },
+    deserialize: (_notion: any, page) => {
+      const icon = page.icon;
+      if (icon?.type !== 'emoji') return '';
+      return icon.emoji;
     },
   };
 }
