@@ -3,7 +3,7 @@ import { notiondb } from './lib/notion-db';
 import { accountsTable, categoriesTable, monthsTable, transactionsTable } from './db/schemas';
 import { zValidator } from '@hono/zod-validator';
 import { createTxSchema } from './shcemas/create-tx';
-import { format } from 'date-fns';
+import { format, formatISO } from 'date-fns';
 import { es } from 'date-fns/locale';
 
 const app = factory.createApp();
@@ -44,7 +44,7 @@ app.post('/transactions', zValidator('json', createTxSchema), async (c) => {
     type: 'Gasto',
     description: data.description,
     amount: data.amount,
-    date: new Date().toISOString(),
+    date: formatISO(new Date(), { format: "basic" }),
     month: monthId,
     category: categoryId,
     account: accountId,
