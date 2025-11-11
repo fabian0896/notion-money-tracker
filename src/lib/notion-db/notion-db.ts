@@ -11,7 +11,7 @@ export class NotionDBClient {
     });
   }
 
-  async from<T extends Schema>(
+  async query<T extends Schema>(
     schema: DatabaseSchema<T>
   ): Promise<InferSchemaType<T>[]> {
     const reuls = await this.client.dataSources.query({
@@ -26,15 +26,15 @@ export class NotionDBClient {
   async insert<T extends Schema>(
     schema: DatabaseSchema<T>,
     data: InferSchemaType<T>,
-  ) {
-    return this.getPropertyObject(schema.schema, data);
-    await this.client.dataSources.create({
+  ): Promise<InferSchemaType<T>> {
+    const result = await this.client.dataSources.create({
       parent: {
         database_id: schema.databaseId,
         type: 'database_id',
       },
       properties: this.getPropertyObject(schema.schema, data),
     });
+    return result as InferSchemaType<T>;
   }
 
   private getPropertyObject<T extends Schema>(schema: T, data: InferSchemaType<T>) {
