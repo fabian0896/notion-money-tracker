@@ -3,12 +3,14 @@ import { Client, PageObjectResponse } from "@notionhq/client";
 
 export class NotionDBClient {
   private client: Client;
+  private token: string;
 
   constructor(token: string) {
     this.client = new Client({
       auth: token,
       fetch: (url, init) => fetch(url, init),
     });
+    this.token = token;
   }
 
   async query<T extends Schema>(
@@ -27,14 +29,23 @@ export class NotionDBClient {
     schema: DatabaseSchema<T>,
     data: InferSchemaType<T>,
   ): Promise<InferSchemaType<T>> {
-    const result = await this.client.dataSources.create({
-      parent: {
-        database_id: schema.databaseId,
-        type: 'database_id',
+    const properties = this.getPropertyObject(schema.schema, data);
+    const result = await fetch('https://api.notion.com/v1/pages', {
+      method: 'POST',
+      headers: {
+        'Notion-Version': '2025-09-03',
+        'Authorization': `Bearer ${this.token}`,
+        'Content-Type': 'application/json'
       },
-      properties: this.getPropertyObject(schema.schema, data),
+      body: JSON.stringify({
+        parent: {
+          data_source_id: schema.databaseId,
+          type: "data_source_id",
+        },
+        properties,
+      })
     });
-    return result as InferSchemaType<T>;
+    return result.json<InferSchemaType<T>>();
   }
 
   private getPropertyObject<T extends Schema>(schema: T, data: InferSchemaType<T>) {

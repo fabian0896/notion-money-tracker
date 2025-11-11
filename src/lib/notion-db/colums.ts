@@ -103,7 +103,9 @@ export function number(notionName: string): Column<number | null> {
   return {
     type: "number",
     notionName,
-    serialize: (value: number | null) => ({ number: value }),
+    serialize: (value: number | null) => ({ 
+      number: value 
+    }),
     deserialize: (notion: any) => notion.number ?? null,
   };
 }
