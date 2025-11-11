@@ -5,4 +5,5 @@ export const createTxSchema = z.object({
   amount: z.number(),
   description: z.string(),
   category: z.string().transform(removeEmojis),
+  card: z.string().optional(),
 });
