@@ -3,7 +3,7 @@ import { Column } from "./db-types";
 export function id(): Column<string> {
   return {
     type: "id",
-    notionName: "_id",
+    notionName: "",
     serialize: (value: string) => {
       return { id: value };
     },
@@ -120,6 +120,16 @@ export function date(notionName: string): Column<string | null> {
 }
 
 export function richText(notionName: string): Column<string> {
-  return string(notionName); // Mismo que string por ahora
+  return string(notionName);
 }
 
+export function relation(notionName: string): Column<string | undefined> {
+  return {
+    type: "relation",
+    notionName,
+    serialize: (value: string | undefined) => ({
+      relation: value ? [{ id: value }] : [],
+    }),
+    deserialize: (notion: any) => notion.relation?.[0]?.id || undefined,
+  };
+}

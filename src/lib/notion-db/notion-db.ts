@@ -23,6 +23,33 @@ export class NotionDBClient {
     });
   }
 
+  async insert<T extends Schema>(
+    schema: DatabaseSchema<T>,
+    data: InferSchemaType<T>,
+  ) {
+    return this.getPropertyObject(schema.schema, data);
+    await this.client.dataSources.create({
+      parent: {
+        database_id: schema.databaseId,
+        type: 'database_id',
+      },
+      properties: this.getPropertyObject(schema.schema, data),
+    });
+  }
+
+  private getPropertyObject<T extends Schema>(schema: T, data: InferSchemaType<T>) {
+    const select = Object.entries(schema);
+    return select.reduce(
+      (acc, [key, col]) => {
+        const value = data[key];
+        if (!col.notionName) return acc;
+        acc[col.notionName] = col.serialize(value);
+        return acc;
+      },
+      {} as any
+    );
+  }
+
   private format<T extends Schema>(
     schema: T,
     page: PageObjectResponse

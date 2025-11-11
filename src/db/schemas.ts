@@ -1,9 +1,25 @@
-import { CATEGORIES_DATABASE_ID } from "../constants/databases";
-import { emoji, id, title } from "../lib/notion-db";
+import { CATEGORIES_DATABASE_ID, MONTH_DATABASE_ID, TRANSACTIONS_DATABASE_ID } from "../constants/databases";
+import { emoji, id, title, number, date, select, relation } from "../lib/notion-db";
 import { defineNotionTable } from "../lib/notion-db/notion-db";
 
 export const categoriesTable = defineNotionTable(CATEGORIES_DATABASE_ID, {
   id: id(),
   icon: emoji(),
   name: title('Nombre')
+});
+
+export const transactionsTable = defineNotionTable(TRANSACTIONS_DATABASE_ID, {
+  id: id(),
+  amount: number("Valor"),
+  date: date("Fecha"),
+  type: select("Tipo de Transaccion", ["Gasto", "Ingreso", "Transacción"] as const),
+  description: title("Descripción Comercio"),
+  account: relation("Cuentas"),
+  category: relation("Categorías"),
+  month: relation("Mes"),
+});
+
+export const monthsTable = defineNotionTable(MONTH_DATABASE_ID, {
+  id: id(),
+  name: title("Nombre"),
 });
