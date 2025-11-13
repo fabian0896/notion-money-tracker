@@ -22,7 +22,7 @@ app.post('/transactions', zValidator('json', createTxSchema), async (c) => {
   const db = notiondb(c);
   const data = c.req.valid('json');
 
-  console.log({ card: data.card });
+  console.log({ data });
 
   const [categories, months, accounts] = await Promise.all([
     db.query(categoriesTable),
