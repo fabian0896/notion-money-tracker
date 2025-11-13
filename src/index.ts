@@ -41,12 +41,13 @@ app.post('/transactions', zValidator('json', createTxSchema), async (c) => {
 
   const accountId = accounts.at(0)?.id;
 
+  const isoDate = format(new Date(), 'yyyy-MM-dd');
   const txs = await db.insert(transactionsTable, {
     id: 'ignored',
     type: 'Gasto',
     description: data.description,
     amount: data.amount,
-    date: formatISO(new Date(), { format: "basic" }),
+    date: isoDate,
     month: monthId,
     category: categoryId,
     account: accountId,
