@@ -60,4 +60,22 @@ app.post('/test', zValidator('json', CreateTxSchema), async (c) => {
   return c.json(data);
 });
 
+app.use('*', async (c, next) => {
+  if (c.req.method === 'POST' || c.req.method === 'PUT'){
+    console.log('Body:', await c.req.json());
+  }
+  await next();
+});
+
+app.onError((err, c) => {
+  console.error('Error occurred:', err);
+  return c.json(
+    {
+      message: 'Internal Server Error',
+      details: err.message,
+    },
+    500
+  );
+});
+
 export default app;
