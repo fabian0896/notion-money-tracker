@@ -14,7 +14,7 @@ app.get('/categories', async (c) => {
   const response = categories.map((c) => ({
     ...c,
     full_name: `${c.icon} ${c.name}`,
-  }))
+  }));
   return c.json(response);
 });
 
