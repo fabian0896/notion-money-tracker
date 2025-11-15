@@ -41,7 +41,7 @@ app.post('/transactions', zValidator('json', CreateTxSchema), async (c) => {
 
   const accountId = accounts.at(0)?.id;
 
-  let amount = 0;
+  let amount = data.amount ?? data.tx ?? 0;
   if (typeof data.amount === 'string') {
     const cleaned = data.amount.replace(/[$,\s.]/g, '');
     amount = parseInt(cleaned, 10);
