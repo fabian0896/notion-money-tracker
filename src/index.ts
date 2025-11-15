@@ -55,4 +55,9 @@ app.post('/transactions', zValidator('json', CreateTxSchema), async (c) => {
   return c.json(txs);
 });
 
+app.post('/test', zValidator('json', CreateTxSchema), async (c) => {
+  const data = c.req.valid('json');
+  return c.json(data);
+});
+
 export default app;
