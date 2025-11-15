@@ -2,8 +2,8 @@ import { factory } from './lib/factory';
 import { notiondb } from './lib/notion-db';
 import { accountsTable, categoriesTable, monthsTable, transactionsTable } from './db/schemas';
 import { zValidator } from '@hono/zod-validator';
-import { createTxSchema } from './shcemas/create-tx';
-import { format, formatISO } from 'date-fns';
+import { CreateTxSchema } from './shcemas/create-tx';
+import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 
 const app = factory.createApp();
@@ -18,7 +18,7 @@ app.get('/categories', async (c) => {
   return c.json(response);
 });
 
-app.post('/transactions', zValidator('json', createTxSchema), async (c) => {
+app.post('/transactions', zValidator('json', CreateTxSchema), async (c) => {
   const db = notiondb(c);
   const data = c.req.valid('json');
 
@@ -31,7 +31,7 @@ app.post('/transactions', zValidator('json', createTxSchema), async (c) => {
   ]);
 
   const categoryId = categories.find((c) => {
-    return c.name.toLocaleLowerCase() === data.category.toLocaleLowerCase();
+    return c.name.toLocaleLowerCase() === data.category?.toLocaleLowerCase();
   })?.id;
 
   const month = format(new Date(), 'MMMM', { locale: es });
