@@ -41,12 +41,20 @@ app.post('/transactions', zValidator('json', CreateTxSchema), async (c) => {
 
   const accountId = accounts.at(0)?.id;
 
+  let amount = 0;
+  if (typeof data.amount === 'string') {
+    const cleaned = data.amount.replace(/[$,\s.]/g, '');
+    amount = parseInt(cleaned, 10);
+  } else {
+    amount = data.amount;
+  }
+
   const isoDate = format(new Date(), 'yyyy-MM-dd');
   const txs = await db.insert(transactionsTable, {
     id: 'ignored',
     type: 'Gasto',
     description: data.description,
-    amount: data.amount,
+    amount: amount,
     date: isoDate,
     month: monthId,
     category: categoryId,
