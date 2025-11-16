@@ -29,7 +29,9 @@ export class NotionDBClient {
     schema: DatabaseSchema<T>,
     data: InferSchemaType<T>,
   ): Promise<InferSchemaType<T>> {
+    console.log('Inserting data into Notion:', data);
     const properties = this.getPropertyObject(schema.schema, data);
+    console.log('Constructed properties for Notion:', properties);
     const result = await fetch('https://api.notion.com/v1/pages', {
       method: 'POST',
       headers: {
