@@ -5,6 +5,7 @@ import { zValidator } from '@hono/zod-validator';
 import { CreateTxSchema } from './shcemas/create-tx';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { parseToNumber } from './lib/parse-to-number';
 
 const app = factory.createApp();
 
@@ -41,13 +42,7 @@ app.post('/transactions', zValidator('json', CreateTxSchema), async (c) => {
 
   const accountId = accounts.at(0)?.id;
 
-  let amount = data.amount ?? data.tx ?? 0;
-  if (typeof data.amount === 'string') {
-    const cleaned = data.amount.replace(/[$,\s.]/g, '');
-    amount = parseInt(cleaned, 10);
-  } else {
-    amount = data.amount;
-  }
+  const amount = parseToNumber(data.amount || data.tx || 0);
 
   const isoDate = format(new Date(), 'yyyy-MM-dd');
   const txs = await db.insert(transactionsTable, {
@@ -60,7 +55,8 @@ app.post('/transactions', zValidator('json', CreateTxSchema), async (c) => {
     category: categoryId,
     account: accountId,
   });
-  console.log('Logged transaction:', txs);
+
+  console.log({ txs });
   return c.json(txs);
 });
 
