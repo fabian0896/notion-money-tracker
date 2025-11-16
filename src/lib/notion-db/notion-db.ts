@@ -1,5 +1,5 @@
 import { DatabaseSchema, InferSchemaType, Schema } from "./db-types";
-import { Client, PageObjectResponse } from "@notionhq/client";
+import { Client, NotionClientError, PageObjectResponse } from "@notionhq/client";
 
 export class NotionDBClient {
   private client: Client;
@@ -45,6 +45,11 @@ export class NotionDBClient {
         properties,
       })
     });
+    if (!result.ok) {
+      const error = await result.json<NotionClientError>();
+      console.error('Notion API error:', error);
+      throw new Error(error.message);
+    }
     return result.json<InferSchemaType<T>>();
   }
 
