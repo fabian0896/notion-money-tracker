@@ -60,6 +60,7 @@ app.post('/transactions', zValidator('json', CreateTxSchema), async (c) => {
     category: categoryId,
     account: accountId,
   });
+  console.log('Logged transaction:', txs);
   return c.json(txs);
 });
 
