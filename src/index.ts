@@ -40,7 +40,10 @@ app.post('/transactions', zValidator('json', CreateTxSchema), async (c) => {
     return m.name.toLocaleLowerCase() === month.toLocaleLowerCase();
   })?.id;
 
-  const accountId = accounts.at(0)?.id;
+  const defaultAccountId = accounts.at(0)?.id;
+  const accountId = accounts.find((a) => {
+    return a.wallet?.toLocaleLowerCase() === data.card?.toLocaleLowerCase();
+  })?.id || defaultAccountId;
 
   const amount = parseToNumber(data.amount || data.tx || 0);
 
@@ -74,13 +77,10 @@ app.use('*', async (c, next) => {
 
 app.onError((err, c) => {
   console.error('Error occurred:', err);
-  return c.json(
-    {
-      message: 'Internal Server Error',
-      details: err.message,
-    },
-    500
-  );
+  return c.json({
+    message: 'Internal Server Error',
+    details: err.message,
+  }, 500);
 });
 
 export default app;
