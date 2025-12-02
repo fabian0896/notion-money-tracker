@@ -25,6 +25,13 @@ app.get("/categories", async (c) => {
   return c.json(response);
 });
 
+app.get("/categories-v2", async (c) => {
+  const db = notiondb(c);
+  const categories = await db.query(categoriesTable);
+  const response = categories.map((c) => `${c.icon} ${c.name}`);
+  return c.json(response);
+});
+
 app.get("/accounts", async (c) => {
   const db = notiondb(c);
   const categories = await db.query(accountsTable);
@@ -43,10 +50,6 @@ app.post("/transactions", zValidator("json", CreateTxSchema), async (c) => {
     db.query(monthsTable),
     db.query(accountsTable),
   ]);
-
-  const categoryId = categories.find((c) => {
-    return c.name.toLocaleLowerCase() === data.category?.toLocaleLowerCase();
-  })?.id;
 
   const month = format(new Date(), "MMMM", { locale: es });
   const monthId = months.find((m) => {
@@ -72,6 +75,15 @@ app.post("/transactions", zValidator("json", CreateTxSchema), async (c) => {
 
   const amount = parseToNumber(data.amount || data.tx || 0);
 
+  let category = categories.find((c) => {
+    return c.name.toLocaleLowerCase() === data.category?.toLocaleLowerCase();
+  })?.id;
+  if (data.type === 'Transferencia') {
+    category = categories.find((c) => {
+      return c.name.toLocaleLowerCase() === 'transferencia';
+    })?.id;
+  }
+
   const isoDate = formatInTimeZone(new Date(), "America/Bogota", "yyyy-MM-dd");
   const txs = await db.insert(transactionsTable, {
     id: "ignored",
@@ -80,7 +92,7 @@ app.post("/transactions", zValidator("json", CreateTxSchema), async (c) => {
     amount: amount,
     date: isoDate,
     month: monthId,
-    category: categoryId,
+    category: category,
     account: accountId,
     destination: destinationId,
   });
