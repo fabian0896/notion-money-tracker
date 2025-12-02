@@ -65,13 +65,16 @@ app.post("/transactions", zValidator("json", CreateTxSchema), async (c) => {
     );
   })?.id || defaultAccountId;
 
-  const destinationId = accounts.find((a) => {
-    const cardName = data.destination?.toLocaleLowerCase();
-    return (
-      a.wallet?.toLocaleLowerCase() === cardName ||
-      a.name.toLocaleLowerCase() === cardName
-    );
-  })?.id;
+  let destinationId = undefined;
+  if (data.type === 'Transferencia') {
+    destinationId = accounts.find((a) => {
+      const cardName = data.destination?.toLocaleLowerCase();
+      return (
+        a.wallet?.toLocaleLowerCase() === cardName ||
+        a.name.toLocaleLowerCase() === cardName
+      );
+    })?.id;
+  }
 
   const amount = parseToNumber(data.amount || data.tx || 0);
 
