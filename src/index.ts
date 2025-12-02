@@ -6,6 +6,7 @@ import { CreateTxSchema } from './shcemas/create-tx';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { parseToNumber } from './lib/parse-to-number';
+import { formatInTimeZone } from 'date-fns-tz';
 
 const app = factory.createApp();
 
@@ -47,7 +48,7 @@ app.post('/transactions', zValidator('json', CreateTxSchema), async (c) => {
 
   const amount = parseToNumber(data.amount || data.tx || 0);
 
-  const isoDate = format(new Date(), 'yyyy-MM-dd');
+  const isoDate = formatInTimeZone(new Date(), 'America/Bogota' ,'yyyy-MM-dd');
   const txs = await db.insert(transactionsTable, {
     id: 'ignored',
     type: 'Gasto',
