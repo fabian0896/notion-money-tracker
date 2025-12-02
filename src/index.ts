@@ -28,9 +28,7 @@ app.get("/categories", async (c) => {
 app.get("/accounts", async (c) => {
   const db = notiondb(c);
   const categories = await db.query(accountsTable);
-  const response = categories.map((c) => ({
-    full_name: `${c.name}`,
-  }));
+  const response = categories.map((c) => c.name);
   return c.json(response);
 });
 
