@@ -5,7 +5,8 @@ import { defineNotionTable } from "../lib/notion-db/notion-db";
 export const categoriesTable = defineNotionTable(CATEGORIES_DATABASE_ID, {
   id: id(),
   icon: emoji(),
-  name: title('Nombre')
+  name: title('Nombre'),
+  type: select("Tipo 1", ["Gasto", "Ingreso", "Transferencia"] as const),
 });
 
 export const transactionsTable = defineNotionTable(TRANSACTIONS_DATABASE_ID, {

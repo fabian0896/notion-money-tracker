@@ -10,3 +10,7 @@ export const CreateTxSchema = z.object({
   type: z.enum(['Gasto', 'Ingreso', 'Transferencia']).optional().default('Gasto'),
   destination: z.string().optional(),
 });
+
+export const GetCategoriesOptions = z.object({
+  type: z.enum(['Gasto', 'Ingreso', 'Transferencia']).optional().default('Gasto'),
+})

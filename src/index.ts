@@ -7,7 +7,7 @@ import {
   transactionsTable,
 } from "./db/schemas";
 import { zValidator } from "@hono/zod-validator";
-import { CreateTxSchema } from "./shcemas/create-tx";
+import { CreateTxSchema, GetCategoriesOptions } from "./shcemas/create-tx";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { parseToNumber } from "./lib/parse-to-number";
@@ -25,10 +25,13 @@ app.get("/categories", async (c) => {
   return c.json(response);
 });
 
-app.get("/categories-v2", async (c) => {
+app.post("/categories-v2", zValidator('json', GetCategoriesOptions), async (c) => {
+  const { type } = c.req.valid('json');
   const db = notiondb(c);
   const categories = await db.query(categoriesTable);
-  const response = categories.map((c) => `${c.icon} ${c.name}`);
+  const response = categories
+    .filter((c) => c.type === type)
+    .map((c) => `${c.icon} ${c.name}`);
   return c.json(response);
 });
 
