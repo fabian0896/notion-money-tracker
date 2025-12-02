@@ -7,4 +7,5 @@ export const CreateTxSchema = z.object({
   category: z.string().transform(removeEmojis).optional(),
   card: z.string().optional(),
   tx: z.any().optional(),
+  type: z.enum(['Gasto', 'Ingreso', 'Transferencia']).default('Gasto'),
 });

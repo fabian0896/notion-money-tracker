@@ -12,7 +12,7 @@ export const transactionsTable = defineNotionTable(TRANSACTIONS_DATABASE_ID, {
   id: id(),
   amount: number("Valor"),
   date: date("Fecha"),
-  type: select("Tipo de Transaccion", ["Gasto", "Ingreso", "Transacción"] as const),
+  type: select("Tipo de Transaccion", ["Gasto", "Ingreso", "Transferencia"] as const),
   description: title("Descripción Comercio"),
   account: relation("Cuentas"),
   category: relation("Categorías"),
