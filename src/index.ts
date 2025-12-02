@@ -54,14 +54,21 @@ app.post("/transactions", zValidator("json", CreateTxSchema), async (c) => {
   })?.id;
 
   const defaultAccountId = accounts.at(0)?.id;
-  const accountId =
-    accounts.find((a) => {
-      const cardName = data.card?.toLocaleLowerCase();
-      return (
-        a.wallet?.toLocaleLowerCase() === cardName ||
-        a.name.toLocaleLowerCase() === cardName
-      );
-    })?.id || defaultAccountId;
+  const accountId = accounts.find((a) => {
+    const cardName = data.card?.toLocaleLowerCase();
+    return (
+      a.wallet?.toLocaleLowerCase() === cardName ||
+      a.name.toLocaleLowerCase() === cardName
+    );
+  })?.id || defaultAccountId;
+
+  const destinationId = accounts.find((a) => {
+    const cardName = data.destination?.toLocaleLowerCase();
+    return (
+      a.wallet?.toLocaleLowerCase() === cardName ||
+      a.name.toLocaleLowerCase() === cardName
+    );
+  })?.id;
 
   const amount = parseToNumber(data.amount || data.tx || 0);
 
@@ -75,6 +82,7 @@ app.post("/transactions", zValidator("json", CreateTxSchema), async (c) => {
     month: monthId,
     category: categoryId,
     account: accountId,
+    destination: destinationId,
   });
 
   console.log({ txs });

@@ -8,4 +8,5 @@ export const CreateTxSchema = z.object({
   card: z.string().optional(),
   tx: z.any().optional(),
   type: z.enum(['Gasto', 'Ingreso', 'Transferencia']).default('Gasto'),
+  destination: z.string().optional(),
 });

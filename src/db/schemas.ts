@@ -17,6 +17,7 @@ export const transactionsTable = defineNotionTable(TRANSACTIONS_DATABASE_ID, {
   account: relation("Cuentas"),
   category: relation("Categorías"),
   month: relation("Mes"),
+  destination: relation("Destino"),
 });
 
 export const monthsTable = defineNotionTable(MONTH_DATABASE_ID, {
