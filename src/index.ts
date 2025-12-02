@@ -84,11 +84,13 @@ app.post("/transactions", zValidator("json", CreateTxSchema), async (c) => {
     })?.id;
   }
 
+  const description = data.type === 'Transferencia'? 'Transferencia' : data.description;
+
   const isoDate = formatInTimeZone(new Date(), "America/Bogota", "yyyy-MM-dd");
   const txs = await db.insert(transactionsTable, {
     id: "ignored",
     type: data.type,
-    description: data.description,
+    description: description,
     amount: amount,
     date: isoDate,
     month: monthId,
