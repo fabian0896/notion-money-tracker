@@ -19,5 +19,5 @@ export const CreateContactSchema = z.object({
   name: z.string(),
   phone_number: z.string(),
   company: z.string(),
-  email: z.email().optional(),
+  email: z.string().optional(),
 });
