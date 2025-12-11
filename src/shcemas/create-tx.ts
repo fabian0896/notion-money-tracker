@@ -14,3 +14,10 @@ export const CreateTxSchema = z.object({
 export const GetCategoriesOptions = z.object({
   type: z.enum(['Gasto', 'Ingreso', 'Transferencia']).optional().default('Gasto'),
 })
+
+export const CreateContactSchema = z.object({
+  name: z.string(),
+  phone_number: z.string(),
+  company: z.string(),
+  email: z.email(),
+});

@@ -1,5 +1,5 @@
-import { ACCOUNTS_DATABASE_ID, CATEGORIES_DATABASE_ID, MONTH_DATABASE_ID, TRANSACTIONS_DATABASE_ID } from "../constants/databases";
-import { emoji, id, title, number, date, select, relation, richText } from "../lib/notion-db";
+import { ACCOUNTS_DATABASE_ID, CATEGORIES_DATABASE_ID, COMPANIES_DATABASE_ID, CONTACTS_DTABASE_ID, MONTH_DATABASE_ID, TRANSACTIONS_DATABASE_ID } from "../constants/databases";
+import { emoji, id, title, number, date, select, relation, richText, phoneNumber, email } from "../lib/notion-db";
 import { defineNotionTable } from "../lib/notion-db/notion-db";
 
 export const categoriesTable = defineNotionTable(CATEGORIES_DATABASE_ID, {
@@ -30,4 +30,17 @@ export const accountsTable = defineNotionTable(ACCOUNTS_DATABASE_ID, {
   id: id(),
   name: title("Cuenta"),
   wallet: richText('Nombre Tarjeta'),
+});
+
+export const clientsTable = defineNotionTable(COMPANIES_DATABASE_ID, {
+  id: id(),
+  name: title('Nombre'),
+});
+
+export const contactsTable = defineNotionTable(CONTACTS_DTABASE_ID, {
+  id: id(),
+  name: title('Nombre'),
+  phone_number: phoneNumber('Teléfono'),
+  email: email('Correo electrónico'),
+  company: relation('Empresa'),
 });

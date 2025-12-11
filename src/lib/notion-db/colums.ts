@@ -135,3 +135,25 @@ export function relation(notionName: string): Column<string | undefined> {
     deserialize: (notion: any) => notion.relation?.[0]?.id || undefined,
   };
 }
+
+export function email(notionName: string): Column<string | null> {
+  return {
+    type: "email",
+    notionName,
+    serialize: (value: string | null) => ({
+      email: value,
+    }),
+    deserialize: (notion: any) => notion.email || null,
+  };
+}
+
+export function phoneNumber(notionName: string): Column<string | null> {
+  return {
+    type: "phone_number",
+    notionName,
+    serialize: (value: string | null) => ({
+      phone_number: value,
+    }),
+    deserialize: (notion: any) => notion.phone_number || null,
+  };
+}

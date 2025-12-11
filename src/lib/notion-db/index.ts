@@ -8,3 +8,7 @@ export * from './colums';
 export function notiondb(c: Context<HonoEnv>) {
   return new NotionDBClient(c.env.NOTION_API_KEY);
 }
+
+export function notiondbClaro(c: Context<HonoEnv>) {
+  return new NotionDBClient(c.env.CLARO_API_KEY);
+}

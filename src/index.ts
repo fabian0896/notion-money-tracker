@@ -1,13 +1,15 @@
 import { factory } from "./lib/factory";
-import { notiondb } from "./lib/notion-db";
+import { notiondb, notiondbClaro } from "./lib/notion-db";
 import {
   accountsTable,
   categoriesTable,
+  clientsTable,
+  contactsTable,
   monthsTable,
   transactionsTable,
 } from "./db/schemas";
 import { zValidator } from "@hono/zod-validator";
-import { CreateTxSchema, GetCategoriesOptions } from "./shcemas/create-tx";
+import { CreateContactSchema, CreateTxSchema, GetCategoriesOptions } from "./shcemas/create-tx";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { parseToNumber } from "./lib/parse-to-number";
@@ -108,6 +110,33 @@ app.post("/transactions", zValidator("json", CreateTxSchema), async (c) => {
   console.log({ txs });
   return c.json(txs);
 });
+
+
+app.get('/clients', async (c) => {
+  const db = notiondbClaro(c);
+  const clients = await db.query(clientsTable);
+  const list = clients.map((c) => c.name);
+  return c.json(list);
+});
+
+app.post('/contact', zValidator('json', CreateContactSchema), async (c) => {
+  const db = notiondbClaro(c);
+  const data = c.req.valid('json');
+  const clients = await db.query(clientsTable);
+
+  const companyName = data.company.toLocaleLowerCase();
+  const companyId = clients.find((c) => {
+    return c.name.toLocaleLowerCase() === companyName;
+  })?.id;
+
+  await db.insert(contactsTable, {
+    id: 'ignore',
+    name: data.name,
+    phone_number: data.phone_number,
+    email: data.email,
+    company: companyId,
+  });
+})
 
 app.onError((err, c) => {
   console.error("Error occurred:", err);
