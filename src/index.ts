@@ -133,7 +133,7 @@ app.post('/contact', zValidator('json', CreateContactSchema), async (c) => {
     id: 'ignore',
     name: data.name,
     phone_number: data.phone_number,
-    email: data.email,
+    email: data.email || "",
     company: companyId,
   });
 })
