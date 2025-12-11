@@ -136,6 +136,7 @@ app.post('/contact', zValidator('json', CreateContactSchema), async (c) => {
     email: data.email || null,
     company: companyId,
   });
+  return c.json({ status: 'ok' });
 })
 
 app.onError((err, c) => {
