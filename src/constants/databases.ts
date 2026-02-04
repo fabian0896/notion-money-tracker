@@ -4,3 +4,4 @@ export const ACCOUNTS_DATABASE_ID = '2a3dd44d-26cc-80e9-b96d-000b22876a58';
 export const MONTH_DATABASE_ID = '2a4dd44d-26cc-8013-973c-000bd2fb31a7';
 export const COMPANIES_DATABASE_ID = '2b5dd44d-26cc-80b6-a1b1-000b2b1a14b1';
 export const CONTACTS_DTABASE_ID = '2b5dd44d-26cc-80e5-b1e5-000b1bc21c24';
+export const TASK_DATABASE_ID = '2b5dd44d-26cc-80d6-b6b4-000b526c8aad';

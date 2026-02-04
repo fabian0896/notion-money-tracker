@@ -6,6 +6,7 @@ import {
   clientsTable,
   contactsTable,
   monthsTable,
+  taskTable,
   transactionsTable,
 } from "./db/schemas";
 import { zValidator } from "@hono/zod-validator";
@@ -138,6 +139,27 @@ app.post('/contact', zValidator('json', CreateContactSchema), async (c) => {
   });
   return c.json({ status: 'ok' });
 })
+
+app.post('/task', async (c) => {
+  const db = notiondbClaro(c);
+  const data = await c.req.json<any>();
+
+  const clients = await db.query(clientsTable);
+
+  const companyName = data.client.toLocaleLowerCase();
+  const clientId = clients.find((c) => {
+    return c.name.toLocaleLowerCase() === companyName;
+  })?.id;
+
+  await db.insert(taskTable, {
+    id: 'ignore',
+    task: data.task,
+    date: data.date,
+    client: clientId,
+  });
+
+  return c.json({ status: 'OK' });
+});
 
 app.onError((err, c) => {
   console.error("Error occurred:", err);
