@@ -115,7 +115,7 @@ app.post("/transactions", zValidator("json", CreateTxSchema), async (c) => {
 app.get('/clients', async (c) => {
   const db = notiondbClaro(c);
   const clients = await db.query(clientsTable);
-  const list = clients.map((c) => c.name);
+  const list = clients.map((c) => c.name).sort((a, b) => a.localeCompare(b));
   return c.json(list);
 });
 
